@@ -1,4 +1,3 @@
-
 var selector = document.querySelector(".selector_box");
 selector.addEventListener('click', () => {
     if (selector.classList.contains("selector_open")){
@@ -54,24 +53,31 @@ imageInput.addEventListener('change', (event) => {
     var data = new FormData();
     data.append("image", file);
 
-    fetch('	https://api.imgur.com/3/image' ,{
+    // UPDATED FOR IMGBB
+    fetch('https://api.imgbb.com/1/upload?key=624df8f814f28530a0faa334e64dd321' ,{
         method: 'POST',
-        headers: {
-            'Authorization': 'Client-ID c8c28d402435402'
-        },
         body: data
     })
     .then(result => result.json())
     .then(response => {
         
-        var url = response.data.link;
-        upload.classList.remove("error_shown")
-        upload.setAttribute("selected", url);
-        upload.classList.add("upload_loaded");
-        upload.classList.remove("upload_loading");
-        upload.querySelector(".upload_uploaded").src = url;
+        if(response.success) {
+            var url = response.data.url; // ImgBB uses .url
+            upload.classList.remove("error_shown")
+            upload.setAttribute("selected", url);
+            upload.classList.add("upload_loaded");
+            upload.classList.remove("upload_loading");
+            upload.querySelector(".upload_uploaded").src = url;
+        } else {
+            console.error("Upload Error:", response);
+            upload.classList.remove("upload_loading");
+        }
 
     })
+    .catch(err => {
+        console.error("Fetch Error:", err);
+        upload.classList.remove("upload_loading");
+    });
 
 })
 
@@ -160,5 +166,3 @@ document.querySelectorAll(".input").forEach((input) => {
         localStorage.setItem(input.id, input.value);
     });
 });
-
-
