@@ -144,9 +144,10 @@ function isEmpty(value){
 }
 
 function forwardToId(params){
-
-    location.href = "id.html?" + params
-
+    // Using window.location.pathname handles the "repo-name" automatically
+    // We target "id.html" relative to the current folder
+    const target = "id.html?" + params.toString();
+    window.location.href = target;
 }
 
 var guide = document.querySelector(".guide_holder");
